@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-surface-50 text-surface-900 font-sans antialiased min-h-screen selection:bg-rasta-green-soft selection:text-rasta-green;
+  }
+
+  /* Custom scrollbar clean */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F1F5F9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #15803D;
+  }
+}
+
+@layer components {
+  /* Faixa tricolor do reggae elegante */
+  .rasta-ribbon {
+    background: linear-gradient(90deg, #15803D 0%, #EAB308 50%, #DC2626 100%);
+  }
+
+  .rasta-ribbon-subtle {
+    background: linear-gradient(90deg, rgba(21, 128, 61, 0.15) 0%, rgba(234, 179, 8, 0.2) 50%, rgba(220, 38, 38, 0.15) 100%);
+  }
+
+  .clean-card {
+    @apply bg-white border border-slate-200/80 rounded-2xl shadow-clean transition-all duration-200;
+  }
+
+  .clean-card-hover {
+    @apply hover:border-rasta-green/40 hover:shadow-clean-md hover:-translate-y-0.5;
+  }
+}
