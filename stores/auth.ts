@@ -15,18 +15,12 @@ export const useAuthStore = defineStore('auth', () => {
   // Carrega ou sincroniza o perfil do usuário
   const fetchProfile = async () => {
     if (!user.value) {
-      // Verifica se há perfil demo persistido no localStorage (para facilidade de teste local)
-      if (import.meta.client) {
-        const cached = localStorage.getItem('rasta_demo_profile')
-        if (cached) {
-          try {
-            profile.value = JSON.parse(cached)
-            isDemoMode.value = true
-            return
-          } catch {
-            localStorage.removeItem('rasta_demo_profile')
-          }
-        }
+      // Verifica se há perfil demo persistido via cookie (para funcionar no SSR)
+      const demoCookie = useCookie<Profile | null>('rasta_demo_profile')
+      if (demoCookie.value) {
+        profile.value = demoCookie.value
+        isDemoMode.value = true
+        return
       }
       profile.value = null
       return
@@ -82,9 +76,8 @@ export const useAuthStore = defineStore('auth', () => {
         }
         profile.value = adminProfile
         isDemoMode.value = true
-        if (import.meta.client) {
-          localStorage.setItem('rasta_demo_profile', JSON.stringify(adminProfile))
-        }
+        const demoCookie = useCookie<Profile | null>('rasta_demo_profile')
+        demoCookie.value = adminProfile
         return { success: true, data: { user: { id: adminProfile.id, email: 'rastabarber123@admin.local' } } }
       }
 
@@ -140,9 +133,8 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (err) {
       console.error(err)
     } finally {
-      if (import.meta.client) {
-        localStorage.removeItem('rasta_demo_profile')
-      }
+      const demoCookie = useCookie<Profile | null>('rasta_demo_profile')
+      demoCookie.value = null
       profile.value = null
       isDemoMode.value = false
       loading.value = false
@@ -161,9 +153,8 @@ export const useAuthStore = defineStore('auth', () => {
     }
     profile.value = demoProfile
     isDemoMode.value = true
-    if (import.meta.client) {
-      localStorage.setItem('rasta_demo_profile', JSON.stringify(demoProfile))
-    }
+    const demoCookie = useCookie<Profile | null>('rasta_demo_profile')
+    demoCookie.value = demoProfile
   }
 
   // Observa mudanças de estado do usuário

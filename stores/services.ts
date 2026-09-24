@@ -96,26 +96,27 @@ export const useServicesStore = defineStore('services', () => {
   const createService = async (serviceData: Omit<Service, 'id' | 'created_at'>) => {
     loading.value = true
     try {
-      const { data, error } = await supabase
-        .from('services')
-        .insert([serviceData])
-        .select()
-        .single()
+      const { data, error } = await withTimeout(
+        supabase
+          .from('services')
+          .insert([serviceData])
+          .select()
+          .single(),
+        5000
+      )
 
-      if (!error && data) {
+      if (error) {
+        console.error('Erro ao criar no Supabase:', error)
+        throw error
+      }
+
+      if (data) {
         services.value.push(data as Service)
         persistLocal()
         return { success: true, data }
       }
-      
-      const newService: Service = {
-        id: 'serv_' + Date.now(),
-        ...serviceData
-      }
-      services.value.push(newService)
-      persistLocal()
-      return { success: true, data: newService }
     } catch (err: any) {
+      console.warn('Falha ao salvar no banco, usando fallback local:', err)
       const newService: Service = {
         id: 'serv_' + Date.now(),
         ...serviceData
@@ -132,10 +133,15 @@ export const useServicesStore = defineStore('services', () => {
   const updateService = async (id: string, updates: Partial<Service>) => {
     loading.value = true
     try {
-      const { error } = await supabase
-        .from('services')
-        .update(updates)
-        .eq('id', id)
+      const { error } = await withTimeout(
+        supabase
+          .from('services')
+          .update(updates)
+          .eq('id', id),
+        5000
+      )
+      
+      if (error) throw error
 
       const index = services.value.findIndex(s => s.id === id)
       if (index !== -1) {
