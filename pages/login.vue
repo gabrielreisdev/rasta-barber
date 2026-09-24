@@ -35,7 +35,7 @@
               type="text"
               required
               autocomplete="username"
-              placeholder="rastabarber123"
+              placeholder="login"
               class="glass-input"
             />
           </div>
