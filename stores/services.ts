@@ -3,78 +3,84 @@ import type { Service } from '~/types'
 
 const DEFAULT_SERVICES: Service[] = [
   {
-    id: 's1-corte-classico',
-    name: 'Corte Clássico / Degradê',
-    description: 'Corte com tesoura e máquina, acabamento impecável e alinhamento preciso na navalha.',
-    price: 40.00,
-    duration_minutes: 35,
-    is_active: true
-  },
-  {
-    id: 's2-barba-completa',
-    name: 'Barba Completa / Modelagem',
-    description: 'Modelagem completa da barba, alinhamento das linhas e finalização com balm hidratante.',
-    price: 35.00,
+    id: 's1-corte',
+    name: 'Corte',
+    description: 'Corte completo com tesoura e máquina, acabamento impecável e alinhamento preciso na navalha.',
+    price: 18.00,
     duration_minutes: 30,
     is_active: true
   },
   {
-    id: 's3-combo-master',
-    name: 'Combo Rasta Master (Corte + Barba)',
-    description: 'A combinação ideal: corte degradê de precisão + modelagem e alinhamento completo da barba.',
-    price: 70.00,
-    duration_minutes: 60,
+    id: 's2-barba',
+    name: 'Barba',
+    description: 'Modelagem completa da barba, alinhamento das linhas e finalização com balm hidratante.',
+    price: 15.00,
+    duration_minutes: 30,
     is_active: true
   },
   {
-    id: 's4-sobrancelha',
-    name: 'Design de Sobrancelha',
-    description: 'Alinhamento e limpeza precisa com navalhete.',
-    price: 15.00,
-    duration_minutes: 15,
+    id: 's3-corte-barba',
+    name: 'Corte e Barba',
+    description: 'A combinação ideal: corte degradê de precisão + modelagem e alinhamento completo da barba.',
+    price: 30.00,
+    duration_minutes: 60,
     is_active: true
   }
 ]
 
+const STORAGE_KEY = 'rasta_services_v3'
+
 export const useServicesStore = defineStore('services', () => {
   const supabase = useSupabaseClient()
-  const services = ref<Service[]>([])
+  // Inicializa SEMPRE com os serviços padrão — nunca fica vazio
+  const services = ref<Service[]>([...DEFAULT_SERVICES])
   const loading = ref(false)
 
   const activeServices = computed(() => services.value.filter(s => s.is_active))
 
+  // Função auxiliar para timeout de requisição (1.5s)
+  const withTimeout = <T>(promise: Promise<T>, ms = 1500): Promise<T> => {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+    ])
+  }
+
   const fetchServices = async () => {
     loading.value = true
     try {
-      const { data, error } = await supabase
-        .from('services')
-        .select('*')
-        .order('price', { ascending: true })
+      const { data, error } = await withTimeout(
+        supabase
+          .from('services')
+          .select('*')
+          .order('price', { ascending: true })
+      )
 
       if (!error && data && data.length > 0) {
+        // Supabase retornou dados reais — usa eles
         services.value = data as Service[]
-      } else {
-        if (import.meta.client) {
-          const cached = localStorage.getItem('rasta_services')
-          if (cached) {
-            try {
-              const parsed = JSON.parse(cached)
-              // Filtra serviços removidos caso estejam em cache antigo
-              const filtered = parsed.filter((s: Service) =>
-                !s.name.toLowerCase().includes('platinado') &&
-                !s.name.toLowerCase().includes('nevou') &&
-                !s.name.toLowerCase().includes('pigmenta')
-              )
-              services.value = filtered.length > 0 ? filtered : [...DEFAULT_SERVICES]
-              return
-            } catch {}
-          }
+        persistLocal()
+      } else if (import.meta.client) {
+        // Supabase falhou/vazio — tenta cache local, senão mantém DEFAULT_SERVICES
+        localStorage.removeItem('rasta_services')
+        localStorage.removeItem('rasta_services_v2')
+
+        const cached = localStorage.getItem(STORAGE_KEY)
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              services.value = parsed
+            }
+          } catch {}
         }
-        services.value = [...DEFAULT_SERVICES]
+        // Se não tinha cache válido, services já tem DEFAULT_SERVICES
+        persistLocal()
       }
+      // No SSR sem dados do Supabase: services já tem DEFAULT_SERVICES, não mexe
     } catch (err) {
       console.warn('Erro ao carregar serviços remotos (usando dados padrão):', err)
-      services.value = [...DEFAULT_SERVICES]
+      // services já tem DEFAULT_SERVICES, não precisa sobrescrever
     } finally {
       loading.value = false
     }
@@ -82,7 +88,7 @@ export const useServicesStore = defineStore('services', () => {
 
   const persistLocal = () => {
     if (import.meta.client) {
-      localStorage.setItem('rasta_services', JSON.stringify(services.value))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(services.value))
     }
   }
 

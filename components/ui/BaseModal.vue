@@ -10,7 +10,7 @@
     >
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm overflow-y-auto"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/70 backdrop-blur-md overflow-y-auto"
         @click.self="closeOnBackdrop && $emit('update:modelValue', false)"
       >
         <Transition
@@ -24,21 +24,21 @@
           <div
             v-if="modelValue"
             :class="[
-              'w-full rounded-2xl bg-white border border-slate-200 shadow-2xl p-6 relative overflow-hidden',
+              'w-full rounded-2xl bg-dark-800 border border-white/[0.08] shadow-clean-lg p-6 relative overflow-hidden',
               maxWidthClass
             ]"
           >
-            <!-- Faixa Rasta no topo do modal -->
-            <div class="absolute top-0 left-0 right-0 h-1.5 rasta-ribbon"></div>
+            <!-- Rasta ribbon top accent -->
+            <div class="absolute top-0 left-0 right-0 h-[2px] rasta-ribbon opacity-60"></div>
 
             <!-- Header -->
-            <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 pt-2">
-              <h3 class="text-xl font-bold text-surface-900">
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.06] pt-2">
+              <h3 class="text-lg font-bold text-surface-100">
                 <slot name="title">{{ title }}</slot>
               </h3>
               <button
                 type="button"
-                class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+                class="p-1.5 rounded-lg text-dark-300 hover:text-surface-100 hover:bg-white/[0.06] transition"
                 @click="$emit('update:modelValue', false)"
               >
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,12 +48,12 @@
             </div>
 
             <!-- Body -->
-            <div class="text-surface-700">
+            <div class="text-surface-200">
               <slot />
             </div>
 
             <!-- Footer -->
-            <div v-if="$slots.footer" class="pt-4 mt-6 border-t border-slate-100 flex justify-end gap-3">
+            <div v-if="$slots.footer" class="pt-4 mt-6 border-t border-white/[0.06] flex justify-end gap-3">
               <slot name="footer" />
             </div>
           </div>

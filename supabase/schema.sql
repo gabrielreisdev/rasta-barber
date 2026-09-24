@@ -290,8 +290,7 @@ ON CONFLICT (day_of_week) DO NOTHING;
 -- SEED: Serviços Iniciais
 INSERT INTO public.services (name, description, price, duration_minutes, is_active)
 VALUES
-    ('Corte Clássico / Degradê', 'Corte com tesoura e máquina, acabamento impecável e alinhamento preciso na navalha.', 40.00, 35, true),
-    ('Barba Completa / Modelagem', 'Modelagem completa da barba, alinhamento das linhas e finalização com balm hidratante.', 35.00, 30, true),
-    ('Combo Rasta Master (Corte + Barba)', 'A combinação ideal: corte degradê de precisão + modelagem e alinhamento completo da barba.', 70.00, 60, true),
-    ('Design de Sobrancelha', 'Alinhamento e limpeza precisa com navalhete.', 15.00, 15, true)
+    ('Corte', 'Corte com tesoura e máquina, acabamento impecável e alinhamento preciso na navalha.', 18.00, 30, true),
+    ('Barba', 'Modelagem completa da barba, alinhamento das linhas e finalização com balm hidratante.', 15.00, 30, true),
+    ('Corte e Barba', 'A combinação ideal: corte degradê de precisão + modelagem e alinhamento completo da barba.', 30.00, 60, true)
 ON CONFLICT DO NOTHING;

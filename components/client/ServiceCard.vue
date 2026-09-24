@@ -1,49 +1,62 @@
 <template>
   <div
     :class="[
-      'relative group p-5 rounded-2xl transition-all duration-200 border select-none cursor-pointer flex flex-col justify-between shadow-clean',
+      'group relative flex flex-col justify-between p-8 rounded-[2rem] overflow-hidden transition-all duration-500 cursor-pointer',
+      'min-h-[280px]',
       isSelected
-        ? 'bg-gradient-to-br from-green-50/60 via-white to-emerald-50/30 border-rasta-green shadow-clean-md ring-2 ring-rasta-green/30'
-        : 'bg-white border-slate-200/90 hover:border-rasta-green/50 hover:shadow-clean-md hover:-translate-y-0.5'
+        ? 'bg-dark-800 shadow-[0_0_0_2px_rgba(52,211,153,1)] scale-[0.98]'
+        : 'bg-dark-900 border border-white/[0.04] hover:bg-dark-850 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/50'
     ]"
     @click="$emit('select', service)"
   >
-    <!-- Selection Checkmark Badge -->
+    <!-- Background Gradient Effect -->
     <div
-      :class="[
-        'absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200',
-        isSelected
-          ? 'bg-rasta-green text-white scale-100 shadow-sm'
-          : 'border-2 border-slate-300 group-hover:border-rasta-green/60 bg-white'
-      ]"
-    >
-      <svg v-if="isSelected" class="w-3.5 h-3.5 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-      </svg>
-    </div>
+      class="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+    ></div>
 
-    <!-- Info Top -->
-    <div class="pr-8 space-y-1.5">
-      <h3 class="font-extrabold text-base text-surface-900 group-hover:text-rasta-green transition-colors">
-        {{ service.name }}
-      </h3>
-      <p class="text-xs text-surface-700 leading-relaxed line-clamp-2">
-        {{ service.description || 'Atendimento com produtos premium e técnica apurada.' }}
-      </p>
-    </div>
-
-    <!-- Info Bottom (Price & Duration) -->
-    <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-      <div class="flex items-center gap-1.5 text-xs text-surface-700 font-semibold">
-        <svg class="w-4 h-4 text-rasta-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <!-- Top Section: Checkmark & Icon -->
+    <div class="relative z-10 flex items-start justify-between">
+      <div
+        :class="[
+          'w-10 h-10 rounded-2xl flex items-center justify-center transition-all duration-300',
+          isSelected
+            ? 'bg-accent text-dark-950 shadow-glow-green'
+            : 'bg-dark-800 text-dark-400 group-hover:bg-dark-700 group-hover:text-surface-100'
+        ]"
+      >
+        <svg v-if="isSelected" class="w-5 h-5 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
         </svg>
-        <span>{{ formatDuration(service.duration_minutes) }}</span>
+        <svg v-else class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
       </div>
 
-      <div class="text-right">
-        <span class="text-base font-black text-rasta-green font-sans">
-          {{ formatCurrency(service.price) }}
+      <!-- Duration Tag -->
+      <div class="px-3 py-1.5 rounded-full bg-dark-950/50 border border-white/[0.05] flex items-center gap-1.5 backdrop-blur-md">
+        <svg class="w-3.5 h-3.5 text-dark-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="text-xs font-bold tracking-wider text-surface-200">
+          {{ formatDuration(service.duration_minutes) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Info & Price -->
+    <div class="relative z-10 mt-auto pt-8">
+      <h3 class="text-2xl font-black text-white tracking-tight leading-none mb-3 group-hover:text-accent transition-colors">
+        {{ service.name }}
+      </h3>
+      
+      <p class="text-sm text-dark-400 font-medium leading-relaxed line-clamp-2 mb-6">
+        {{ service.description || 'Acabamento premium para o seu estilo.' }}
+      </p>
+
+      <div class="flex items-end justify-between border-t border-white/[0.06] pt-5">
+        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-dark-500">Valor</span>
+        <span class="text-3xl font-black text-white tracking-tighter">
+          {{ formatCurrency(service.price).replace('R$', '') }}<span class="text-sm text-dark-400 ml-1 font-bold">BRL</span>
         </span>
       </div>
     </div>
@@ -57,6 +70,7 @@ import { formatCurrency, formatDuration } from '~/utils/formatters'
 defineProps<{
   service: Service
   isSelected?: boolean
+  index?: number
 }>()
 
 defineEmits<{

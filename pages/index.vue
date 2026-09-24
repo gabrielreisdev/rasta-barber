@@ -1,147 +1,107 @@
 <template>
-  <div class="space-y-16 pb-16">
-    <!-- Hero Section -->
-    <section class="relative pt-12 sm:pt-20 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div class="text-center space-y-6 max-w-3xl mx-auto">
-        <!-- Badge Rasta -->
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rasta-green-soft border border-rasta-green-border text-rasta-green text-xs font-black uppercase tracking-widest shadow-sm">
-          <span>Barbearia & Cortes Roots</span>
-        </div>
+  <div class="min-h-screen bg-dark-950">
+    <!-- Cinematic Hero Section -->
+    <section class="relative h-[85vh] sm:h-[90vh] flex items-center justify-center overflow-hidden">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img
+          src="/hero-bg.jpg"
+          alt="Barbershop Interior"
+          class="w-full h-full object-cover opacity-40 scale-105 transform animate-slow-pan"
+        />
+        <div class="absolute inset-0 bg-gradient-to-b from-dark-950/20 via-dark-950/60 to-dark-950"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-dark-950/80 via-transparent to-dark-950/80"></div>
+      </div>
 
-        <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-surface-900 leading-tight">
-          Cortes de Precisão & <br />
-          <span class="text-rasta-green">Vibe Única no Rasta</span>
+      <!-- Hero Content -->
+      <div class="relative z-10 text-center px-4 max-w-4xl mx-auto space-y-8 mt-12">
+        <!-- <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-dark-900/60 backdrop-blur-md border border-white/10 shadow-clean">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
+          </span>
+          <span class="text-xs font-bold uppercase tracking-[0.2em] text-surface-200">A Nova Geração da Barbearia</span>
+        </div> -->
+
+        <h1 class="text-6xl sm:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9]">
+          CORTE <br class="sm:hidden" />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-surface-200 to-dark-400">PRECISO.</span><br />
+          <span class="text-accent italic font-serif">VIBE ÚNICA.</span>
         </h1>
 
-        <p class="text-base sm:text-lg text-slate-700 leading-relaxed max-w-2xl mx-auto font-medium">
-          Cortes degradê impecáveis, alinhamento de barba e acabamento preciso na navalha. Acompanhe a presença do barbeiro em tempo real e reserve seu horário online sem filas.
+        <p class="text-lg sm:text-xl text-dark-300 max-w-2xl mx-auto font-medium leading-relaxed">
+          Onde a técnica apurada encontra o estilo moderno. Agende seu horário e experimente o padrão Rasta Barber.
         </p>
 
-        <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
           <NuxtLink to="/agendar" class="w-full sm:w-auto">
-            <BaseButton size="lg" variant="primary" class="w-full sm:w-auto px-8">
-              <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Agendar Meu Horário
-            </BaseButton>
+            <button class="w-full sm:w-auto px-10 py-4 rounded-full bg-accent hover:bg-emerald-400 text-dark-950 font-bold text-sm tracking-widest uppercase transition-all duration-300 shadow-[0_0_40px_-10px_rgba(52,211,153,0.5)] hover:shadow-[0_0_60px_-10px_rgba(52,211,153,0.7)] hover:-translate-y-1">
+              Agendar Agora
+            </button>
           </NuxtLink>
-
-          <a href="#catalogo" class="w-full sm:w-auto">
-            <BaseButton size="lg" variant="secondary" class="w-full sm:w-auto">
-              Ver Serviços e Preços
-            </BaseButton>
-          </a>
         </div>
       </div>
     </section>
 
-    <!-- Real-time Barber Live Status Banner -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <BarberLiveBanner />
-    </section>
-
-    <!-- Calendário Mensal de Presença do Barbeiro -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <ClientMonthCalendar />
-    </section>
-
-    <!-- Services Catalog Section -->
-    <section id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-6">
+    <!-- Bento Grid Services Section -->
+    <section class="relative z-20 -mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
+      <!-- Section Header -->
+      <div class="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <div>
-          <span class="text-xs font-black uppercase tracking-wider text-rasta-gold">Cardápio de Serviços</span>
-          <h2 class="text-3xl font-black text-surface-900 mt-1">Cortes & Barba</h2>
+          <span class="text-sm font-bold uppercase tracking-widest text-accent mb-2 block">Menu</span>
+          <h2 class="text-4xl sm:text-5xl font-black text-white tracking-tight">Serviços Premium</h2>
         </div>
-        <p class="text-sm text-slate-700 max-w-md">
-          Clique no serviço desejado para adicioná-lo ao agendamento direto.
+        <p class="text-dark-300 text-sm max-w-xs sm:text-right">
+          Selecione o serviço desejado abaixo para iniciar o agendamento expresso.
         </p>
       </div>
 
-      <!-- Services Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Services Grid (Bento Box style) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <ServiceCard
-          v-for="service in servicesStore.activeServices"
+          v-for="(service, index) in servicesStore.activeServices"
           :key="service.id"
           :service="service"
+          :index="index"
           :is-selected="bookingStore.isServiceSelected(service.id)"
           @select="handleServiceClick"
         />
       </div>
 
-      <!-- Quick Action Floating Bar if services selected -->
-      <div
-        v-if="bookingStore.selectedServices.length > 0"
-        class="sticky bottom-6 z-30 p-4 rounded-2xl bg-white border-2 border-rasta-green shadow-clean-lg flex items-center justify-between gap-4 max-w-2xl mx-auto transition-all"
+      <!-- Floating Checkout Action -->
+      <Transition
+        enter-active-class="transition duration-500 ease-out"
+        enter-from-class="opacity-0 translate-y-12 scale-95"
+        enter-to-class="opacity-100 translate-y-0 scale-100"
+        leave-active-class="transition duration-300 ease-in"
+        leave-from-class="opacity-100 translate-y-0 scale-100"
+        leave-to-class="opacity-0 translate-y-12 scale-95"
       >
-        <div>
-          <p class="text-xs text-slate-600 font-semibold">
-            <span class="font-bold text-surface-900">{{ bookingStore.selectedServices.length }}</span> serviço(s) selecionado(s)
-          </p>
-          <p class="text-lg font-black text-rasta-green">
-            {{ formatCurrency(bookingStore.totalPrice) }}
-            <span class="text-xs text-slate-600 font-normal">({{ formatDuration(bookingStore.totalDurationMinutes) }})</span>
-          </p>
+        <div
+          v-if="bookingStore.selectedServices.length > 0"
+          class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md p-4 rounded-3xl bg-dark-900/90 backdrop-blur-xl border border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] flex items-center justify-between"
+        >
+          <div class="pl-3">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-dark-400">Total Selecionado</p>
+            <p class="text-xl font-black text-white">
+              {{ formatCurrency(bookingStore.totalPrice) }}
+            </p>
+          </div>
+          <NuxtLink to="/agendar">
+            <button class="px-8 py-3.5 rounded-2xl bg-accent text-dark-950 font-bold text-sm hover:bg-emerald-400 transition-colors shadow-glow-green">
+              Continuar
+            </button>
+          </NuxtLink>
         </div>
-
-        <NuxtLink to="/agendar">
-          <BaseButton variant="primary" size="md">
-            Prosseguir para Data/Hora →
-          </BaseButton>
-        </NuxtLink>
-      </div>
-    </section>
-
-    <!-- Experience / Brand Highlights -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-clean flex items-start gap-4">
-          <div class="p-3 rounded-xl bg-rasta-green-soft text-rasta-green font-bold">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-bold text-surface-900 text-sm">Navalhado & Acabamento Preciso</h3>
-            <p class="text-xs text-slate-700 mt-1">Linhas nítidas, precisão nas tesouras e alinhamento milimétrico.</p>
-          </div>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-clean flex items-start gap-4">
-          <div class="p-3 rounded-xl bg-rasta-gold-soft text-rasta-gold font-bold">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-bold text-surface-900 text-sm">Sem Filas de Espera</h3>
-            <p class="text-xs text-slate-700 mt-1">Agende seu horário online com precisão e seja atendido na hora marcada.</p>
-          </div>
-        </div>
-
-        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-clean flex items-start gap-4">
-          <div class="p-3 rounded-xl bg-rasta-red-soft text-rasta-red font-bold">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-bold text-surface-900 text-sm">Status em Tempo Real</h3>
-            <p class="text-xs text-slate-700 mt-1">Saiba instantaneamente se o barbeiro está presente e disponível.</p>
-          </div>
-        </div>
-      </div>
+      </Transition>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import BaseButton from '~/components/ui/BaseButton.vue'
-import BarberLiveBanner from '~/components/client/BarberLiveBanner.vue'
-import ClientMonthCalendar from '~/components/client/ClientMonthCalendar.vue'
 import ServiceCard from '~/components/client/ServiceCard.vue'
 import type { Service } from '~/types'
-import { formatCurrency, formatDuration } from '~/utils/formatters'
+import { formatCurrency } from '~/utils/formatters'
 
 const servicesStore = useServicesStore()
 const bookingStore = useBookingStore()
@@ -154,3 +114,20 @@ const handleServiceClick = (service: Service) => {
   bookingStore.toggleService(service)
 }
 </script>
+
+<style scoped>
+@keyframes slow-pan {
+  0% {
+    transform: scale(1.05) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.1) translate(-1%, -1%);
+  }
+  100% {
+    transform: scale(1.05) translate(0, 0);
+  }
+}
+.animate-slow-pan {
+  animation: slow-pan 30s ease-in-out infinite;
+}
+</style>

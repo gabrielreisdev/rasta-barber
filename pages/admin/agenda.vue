@@ -1,22 +1,22 @@
 <template>
   <div class="space-y-8">
     <!-- Header -->
-    <div class="border-b border-slate-200 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="border-b border-white/[0.06] pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
         <span class="text-xs font-black uppercase tracking-widest text-rasta-gold">Gestão de Agenda & Folgas</span>
-        <h1 class="text-3xl font-black text-surface-900 mt-1">Horários & Expediente</h1>
-        <p class="text-sm text-slate-700">
+        <h1 class="text-3xl font-black text-surface-100 mt-1">Horários & Expediente</h1>
+        <p class="text-sm text-dark-300">
           Bloqueie dias específicos no calendário e configure o horário de funcionamento semanal da barbearia.
         </p>
       </div>
 
       <!-- Tabs Switcher -->
-      <div class="flex p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold shadow-clean">
+      <div class="flex p-1 rounded-xl bg-dark-900 border border-white/[0.06] text-xs font-bold shadow-clean-md">
         <button
           type="button"
           :class="[
             'px-4 py-2 rounded-lg transition-all',
-            activeTab === 'calendar' ? 'bg-white text-rasta-green shadow-sm font-black' : 'text-slate-600 hover:text-surface-900'
+            activeTab === 'calendar' ? 'bg-dark-800 text-accent shadow-sm font-black' : 'text-dark-400 hover:text-surface-100'
           ]"
           @click="activeTab = 'calendar'"
         >
@@ -26,7 +26,7 @@
           type="button"
           :class="[
             'px-4 py-2 rounded-lg transition-all',
-            activeTab === 'hours' ? 'bg-white text-rasta-green shadow-sm font-black' : 'text-slate-600 hover:text-surface-900'
+            activeTab === 'hours' ? 'bg-dark-800 text-accent shadow-sm font-black' : 'text-dark-400 hover:text-surface-100'
           ]"
           @click="activeTab = 'hours'"
         >
@@ -42,9 +42,9 @@
 
     <!-- Tab 2: Horários Semanais e Almoço -->
     <div v-else-if="activeTab === 'hours'" class="space-y-4">
-      <div v-if="savedSuccess" class="p-4 rounded-xl bg-rasta-green-soft border border-rasta-green-border text-xs text-rasta-green font-bold flex items-center justify-between shadow-sm">
+      <div v-if="savedSuccess" class="p-4 rounded-xl bg-accent-soft border border-accent-border text-xs text-accent font-bold flex items-center justify-between shadow-sm">
         <span>Horários semanais atualizados com sucesso!</span>
-        <button @click="savedSuccess = false" class="text-slate-600 hover:text-surface-900">&times;</button>
+        <button @click="savedSuccess = false" class="text-dark-400 hover:text-surface-100">&times;</button>
       </div>
 
       <WorkingHoursEditor @saved="handleSaved" />

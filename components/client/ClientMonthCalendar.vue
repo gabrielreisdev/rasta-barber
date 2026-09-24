@@ -1,25 +1,22 @@
 <template>
-  <div class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-clean space-y-6">
-    <!-- Header do Calendário do Cliente -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+  <div class="p-6 sm:p-8 rounded-2xl bg-dark-800/60 border border-white/[0.06] space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
       <div>
-        <span class="text-xs font-black uppercase tracking-wider text-rasta-gold">Disponibilidade Mensal</span>
-        <h3 class="text-xl sm:text-2xl font-black text-surface-900 mt-0.5 flex items-center gap-2">
-          <span>Dias de Atendimento do Rasta</span>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rasta-green-soft text-rasta-green border border-rasta-green-border">
-            Atualizado em Tempo Real
-          </span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-rasta-gold">Disponibilidade</span>
+        <h3 class="text-lg sm:text-xl font-bold text-surface-100 mt-0.5">
+          Dias de Atendimento
         </h3>
-        <p class="text-xs sm:text-sm text-slate-600 mt-1">
-          Confira abaixo os dias em que o barbeiro estará presente. Clique em um dia disponível para agendar seu horário.
+        <p class="text-xs text-dark-300 mt-1">
+          Clique em um dia disponível para agendar.
         </p>
       </div>
 
-      <!-- Navegação de Mês -->
-      <div class="flex items-center gap-2 self-start sm:self-auto bg-slate-50 p-1.5 rounded-2xl border border-slate-200">
+      <!-- Month Navigation -->
+      <div class="flex items-center gap-2 self-start sm:self-auto bg-dark-700/50 p-1 rounded-xl border border-white/[0.06]">
         <button
           type="button"
-          class="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-surface-800 transition shadow-xs"
+          class="p-2 rounded-lg hover:bg-white/[0.06] text-dark-300 hover:text-surface-100 transition"
           @click="prevMonth"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -27,13 +24,13 @@
           </svg>
         </button>
 
-        <span class="text-xs sm:text-sm font-black text-surface-900 min-w-[130px] text-center capitalize px-2">
+        <span class="text-sm font-semibold text-surface-100 min-w-[130px] text-center capitalize px-2">
           {{ currentMonthLabel }}
         </span>
 
         <button
           type="button"
-          class="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-surface-800 transition shadow-xs"
+          class="p-2 rounded-lg hover:bg-white/[0.06] text-dark-300 hover:text-surface-100 transition"
           @click="nextMonth"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,22 +40,22 @@
       </div>
     </div>
 
-    <!-- Legenda de Cores -->
-    <div class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-bold text-slate-700 bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+    <!-- Legend -->
+    <div class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-dark-300 bg-dark-700/30 p-3 rounded-xl border border-white/[0.04]">
       <div class="flex items-center gap-2">
-        <span class="w-3.5 h-3.5 rounded-md bg-rasta-green border border-green-600"></span>
-        <span>Dia com Atendimento (Disponível)</span>
+        <span class="w-3 h-3 rounded-md bg-accent/80"></span>
+        <span>Disponível</span>
       </div>
       <div class="flex items-center gap-2">
-        <span class="w-3.5 h-3.5 rounded-md bg-slate-200 border border-slate-300"></span>
+        <span class="w-3 h-3 rounded-md bg-dark-600"></span>
         <span>Folga / Indisponível</span>
       </div>
     </div>
 
-    <!-- Grid do Calendário -->
+    <!-- Calendar Grid -->
     <div>
-      <!-- Dias da Semana Header -->
-      <div class="grid grid-cols-7 gap-1.5 sm:gap-2 mb-2 text-center text-[11px] sm:text-xs font-black uppercase text-slate-500">
+      <!-- Week Days Header -->
+      <div class="grid grid-cols-7 gap-1.5 sm:gap-2 mb-2 text-center text-[11px] sm:text-xs font-semibold uppercase text-dark-400">
         <span>Dom</span>
         <span>Seg</span>
         <span>Ter</span>
@@ -68,36 +65,36 @@
         <span>Sáb</span>
       </div>
 
-      <!-- Células do Calendário -->
+      <!-- Calendar Cells -->
       <div class="grid grid-cols-7 gap-1.5 sm:gap-2">
-        <!-- Espaços vazios do início do mês -->
+        <!-- Empty slots -->
         <div
           v-for="empty in startDayOfWeek"
           :key="'empty-' + empty"
-          class="h-16 sm:h-20 rounded-2xl bg-slate-50/30 border border-transparent opacity-20 pointer-events-none"
+          class="h-14 sm:h-18 rounded-xl bg-dark-850/30 border border-transparent opacity-20 pointer-events-none"
         ></div>
 
-        <!-- Dias do Mês -->
+        <!-- Day cells -->
         <button
           v-for="day in daysInCurrentMonth"
           :key="day.dateStr"
           type="button"
           :disabled="day.isPast || !day.isOpen"
           :class="[
-            'h-16 sm:h-20 p-2 sm:p-2.5 rounded-2xl border transition-all duration-200 flex flex-col justify-between text-left select-none relative group',
-            day.isPast ? 'opacity-30 bg-slate-100 border-slate-200 cursor-not-allowed' :
-            !day.isOpen ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed' :
-            'bg-gradient-to-b from-white to-emerald-50/60 border-rasta-green-border hover:border-rasta-green text-surface-900 shadow-sm hover:shadow-clean-md hover:scale-[1.03] cursor-pointer'
+            'h-14 sm:h-18 p-2 rounded-xl border transition-all duration-200 flex flex-col justify-between text-left select-none relative group',
+            day.isPast ? 'opacity-20 bg-dark-800/30 border-transparent cursor-not-allowed' :
+            !day.isOpen ? 'bg-dark-800/30 border-white/[0.04] text-dark-400 cursor-not-allowed' :
+            'bg-dark-700/40 border-white/[0.06] hover:border-accent/40 text-surface-100 hover:bg-dark-700/60 hover:shadow-sm cursor-pointer'
           ]"
           @click="selectDayToBook(day.dateStr)"
         >
-          <!-- Topo do Dia: Número e Badge -->
+          <!-- Day Number -->
           <div class="flex items-center justify-between w-full">
             <span
               :class="[
-                'text-sm sm:text-base font-black',
-                day.isOpen && !day.isPast ? 'text-surface-900 group-hover:text-rasta-green' : 'text-slate-400',
-                day.isToday ? 'underline decoration-2 decoration-rasta-gold underline-offset-2' : ''
+                'text-sm font-semibold',
+                day.isOpen && !day.isPast ? 'text-surface-100 group-hover:text-accent' : 'text-dark-400',
+                day.isToday ? 'text-accent' : ''
               ]"
             >
               {{ day.dayNumber }}
@@ -105,22 +102,22 @@
 
             <span
               v-if="day.isToday"
-              class="text-[8px] sm:text-[9px] font-black uppercase bg-rasta-gold text-white px-1.5 py-0.5 rounded shadow-xs"
+              class="text-[7px] sm:text-[8px] font-bold uppercase bg-accent text-dark-950 px-1.5 py-0.5 rounded"
             >
               Hoje
             </span>
           </div>
 
-          <!-- Rodapé do Dia: Status e Horário -->
-          <div class="text-[9px] sm:text-[10px] font-black uppercase tracking-tight">
-            <span v-if="day.isPast" class="text-slate-400 font-medium">Passou</span>
-            <span v-else-if="!day.isOpen" class="text-slate-500 font-bold">Folga</span>
+          <!-- Day Status Footer -->
+          <div class="text-[9px] sm:text-[10px] font-medium">
+            <span v-if="day.isPast" class="text-dark-500">—</span>
+            <span v-else-if="!day.isOpen" class="text-dark-400">Folga</span>
             <div v-else class="flex flex-col">
-              <span class="text-rasta-green flex items-center gap-1 font-black">
-                <span class="w-1.5 h-1.5 rounded-full bg-rasta-green animate-pulse"></span>
-                Atendendo
+              <span class="text-accent flex items-center gap-1">
+                <span class="w-1 h-1 rounded-full bg-accent"></span>
+                Aberto
               </span>
-              <span class="text-[9px] text-slate-500 font-semibold lowercase hidden sm:inline">
+              <span class="text-[8px] text-dark-400 hidden sm:inline">
                 {{ day.hoursText }}
               </span>
             </div>
@@ -177,13 +174,9 @@ const daysInCurrentMonth = computed(() => {
     const isToday = dObj.getTime() === today.getTime()
     const dayOfWeek = dObj.getDay()
 
-    // Configuração semanal do dia
     const weeklyConfig = hoursList.find(w => w.day_of_week === dayOfWeek)
     const isWeeklyOff = weeklyConfig ? !weeklyConfig.is_working : false
-
-    // Folga específica cadastrada pelo barbeiro
     const isBlocked = blockedList.includes(dateStr)
-
     const isOpen = !isWeeklyOff && !isBlocked
 
     const hoursText = weeklyConfig && weeklyConfig.is_working

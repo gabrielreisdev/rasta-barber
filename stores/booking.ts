@@ -29,13 +29,13 @@ export const useBookingStore = defineStore('booking', () => {
     return selectedServices.value.reduce((acc, curr) => acc + Number(curr.duration_minutes), 0)
   })
 
-  // Alterna a seleção de um serviço
+  // Alterna a seleção de um serviço (Permite apenas UM serviço por vez)
   const toggleService = (service: Service) => {
-    const index = selectedServices.value.findIndex(s => s.id === service.id)
-    if (index >= 0) {
-      selectedServices.value.splice(index, 1)
+    const isAlreadySelected = selectedServices.value.some(s => s.id === service.id)
+    if (isAlreadySelected) {
+      selectedServices.value = []
     } else {
-      selectedServices.value.push(service)
+      selectedServices.value = [service]
     }
   }
 
@@ -49,41 +49,48 @@ export const useBookingStore = defineStore('booking', () => {
     selectedTime.value = ''
   }
 
+  // Função auxiliar para timeout de requisição (1.5s)
+  const withTimeout = <T>(promise: Promise<T>, ms = 1500): Promise<T> => {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+    ])
+  }
+
   // Busca agendamentos (para verificação de slots e listagem do admin)
   const fetchAppointments = async () => {
     loading.value = true
     try {
-      const { data, error } = await supabase
-        .from('appointments')
-        .select(`
-          *,
-          services:appointment_services(
-            price_at_booking,
-            service:services(id, name, duration_minutes)
-          )
-        `)
-        .order('appointment_date', { ascending: true })
-        .order('start_time', { ascending: true })
+      const { data, error } = await withTimeout(
+        supabase
+          .from('appointments')
+          .select(`
+            *,
+            services:appointment_services(
+              price_at_booking,
+              service:services(id, name, duration_minutes)
+            )
+          `)
+          .order('appointment_date', { ascending: true })
+          .order('start_time', { ascending: true })
+      )
 
       if (!error && data) {
         appointments.value = data.map((item: any) => ({
           ...item,
           services: item.services?.map((s: any) => s.service) || []
         })) as Appointment[]
+        persistLocalAppointments()
       } else {
-        if (import.meta.client) {
-          const cached = localStorage.getItem('rasta_appointments')
-          if (cached) {
-            appointments.value = JSON.parse(cached)
-          }
-        }
+        throw new Error('Supabase error')
       }
     } catch (err) {
-      console.warn('Erro ao carregar agendamentos (usando fallback):', err)
       if (import.meta.client) {
         const cached = localStorage.getItem('rasta_appointments')
         if (cached) {
-          appointments.value = JSON.parse(cached)
+          try {
+            appointments.value = JSON.parse(cached)
+          } catch {}
         }
       }
     } finally {

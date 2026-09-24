@@ -2,33 +2,33 @@
   <div class="min-h-[75vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
     <div class="max-w-md w-full space-y-6">
       <!-- Header -->
-      <div class="text-center space-y-2">
+      <div class="text-center space-y-3">
         <img
           src="/rastabarberlogo.png"
           alt="Rasta Barber"
-          class="w-20 h-20 rounded-2xl object-contain mx-auto shadow-clean hover:scale-105 transition-transform"
+          class="w-16 h-16 rounded-2xl object-contain mx-auto hover:scale-105 transition-transform"
         />
-        <h1 class="text-2xl font-black text-surface-900">
+        <h1 class="text-2xl font-bold text-surface-100">
           Acesso do Barbeiro
         </h1>
-        <p class="text-xs text-slate-600">
-          Informe seu usuário e senha de administrador para acessar seu painel de gestão.
+        <p class="text-xs text-dark-300">
+          Informe suas credenciais para acessar o painel de gestão.
         </p>
       </div>
 
-      <!-- Admin Login Form Card -->
-      <div class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-clean-lg space-y-6 relative overflow-hidden">
-        <div class="absolute top-0 left-0 right-0 h-1.5 rasta-ribbon"></div>
+      <!-- Login Card -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-dark-800/80 border border-white/[0.08] shadow-clean-lg space-y-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-[2px] rasta-ribbon opacity-60"></div>
 
-        <!-- Feedback Error -->
-        <div v-if="errorMessage" class="p-3.5 rounded-xl bg-rasta-red-soft border border-rasta-red-border text-xs text-rasta-red font-bold">
+        <!-- Error -->
+        <div v-if="errorMessage" class="p-3 rounded-xl bg-rasta-red-soft border border-rasta-red-border text-xs text-rasta-red font-semibold">
           {{ errorMessage }}
         </div>
 
         <form @submit.prevent="handleLogin" class="space-y-4 pt-1">
           <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
-              Usuário de Administrador *
+            <label class="block text-xs font-semibold uppercase tracking-wider text-dark-300 mb-1.5">
+              Usuário *
             </label>
             <input
               v-model="username"
@@ -36,12 +36,12 @@
               required
               autocomplete="username"
               placeholder="rastabarber123"
-              class="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 text-sm focus:border-rasta-green focus:bg-white focus:outline-none transition font-semibold"
+              class="glass-input"
             />
           </div>
 
           <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-dark-300 mb-1.5">
               Senha *
             </label>
             <input
@@ -50,7 +50,7 @@
               required
               autocomplete="current-password"
               placeholder="••••••••"
-              class="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 text-sm focus:border-rasta-green focus:bg-white focus:outline-none transition font-semibold"
+              class="glass-input"
             />
           </div>
 
@@ -61,12 +61,12 @@
             class="w-full mt-2"
             :loading="authStore.loading"
           >
-            Entrar no Painel do Barbeiro
+            Entrar no Painel
           </BaseButton>
         </form>
 
-        <div class="pt-2 text-center border-t border-slate-100">
-          <NuxtLink to="/" class="text-xs text-slate-500 hover:text-rasta-green font-bold transition">
+        <div class="pt-2 text-center border-t border-white/[0.06]">
+          <NuxtLink to="/" class="text-xs text-dark-400 hover:text-accent font-medium transition">
             ← Voltar para a Página Inicial
           </NuxtLink>
         </div>

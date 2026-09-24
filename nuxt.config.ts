@@ -24,7 +24,7 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'Agende seu corte e barba no Rasta Barber com facilidade e veja o status do barbeiro em tempo real.' },
-        { name: 'theme-color', content: '#0B0F19' }
+        { name: 'theme-color', content: '#08090C' }
       ],
       link: [
         { rel: 'icon', type: 'image/png', href: '/rastabarberlogo.png' },

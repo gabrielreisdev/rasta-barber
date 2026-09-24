@@ -3,10 +3,10 @@
     :type="type"
     :disabled="disabled || loading"
     :class="[
-      'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98]',
+      'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-dark-900 active:scale-[0.97]',
       sizeClasses,
       variantClasses,
-      (disabled || loading) ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+      (disabled || loading) ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''
     ]"
     @click="$emit('click', $event)"
   >
@@ -51,31 +51,29 @@ const sizeClasses = computed(() => {
     case 'sm':
       return 'px-3.5 py-1.5 text-xs'
     case 'lg':
-      return 'px-6 py-3.5 text-base font-bold shadow-clean-md'
+      return 'px-6 py-3 text-sm font-bold'
     case 'md':
     default:
-      return 'px-4 py-2.5 text-sm shadow-clean'
+      return 'px-4 py-2 text-sm'
   }
 })
 
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'primary':
-      // Rasta Green Principal
-      return 'bg-rasta-green text-white hover:bg-emerald-700 focus:ring-rasta-green focus:ring-offset-white'
+      return 'bg-accent text-dark-950 hover:bg-accent-light focus:ring-accent/40 shadow-sm shadow-accent/20'
     case 'gold':
-      // Rasta Gold/Amarelo
-      return 'bg-rasta-gold text-white hover:bg-amber-700 focus:ring-rasta-gold focus:ring-offset-white'
+      return 'bg-rasta-gold text-dark-950 hover:bg-rasta-gold-light focus:ring-rasta-gold/40'
     case 'secondary':
-      return 'bg-surface-100 hover:bg-surface-200 text-surface-800 border border-slate-200 focus:ring-slate-300'
+      return 'bg-dark-700/60 hover:bg-dark-600/80 text-surface-200 border border-white/[0.08] focus:ring-dark-400/30'
     case 'outline':
-      return 'bg-white border border-rasta-green/60 text-rasta-green hover:bg-rasta-green-soft hover:border-rasta-green focus:ring-rasta-green'
+      return 'bg-transparent border border-accent/40 text-accent hover:bg-accent-soft hover:border-accent/60 focus:ring-accent/30'
     case 'danger':
-      return 'bg-rasta-red-soft hover:bg-red-100 text-rasta-red border border-rasta-red-border focus:ring-rasta-red'
+      return 'bg-rasta-red-soft hover:bg-rasta-red/20 text-rasta-red border border-rasta-red-border focus:ring-rasta-red/30'
     case 'success':
-      return 'bg-rasta-green-soft hover:bg-green-100 text-rasta-green border border-rasta-green-border focus:ring-rasta-green'
+      return 'bg-accent-soft hover:bg-accent/20 text-accent border border-accent-border focus:ring-accent/30'
     case 'ghost':
-      return 'bg-transparent hover:bg-surface-100 text-surface-700 hover:text-surface-900 focus:ring-slate-200'
+      return 'bg-transparent hover:bg-white/[0.04] text-dark-300 hover:text-surface-100 focus:ring-white/10'
     default:
       return ''
   }

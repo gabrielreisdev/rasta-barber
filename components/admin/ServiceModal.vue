@@ -7,7 +7,7 @@
   >
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
+        <label class="block text-xs font-black uppercase tracking-wider text-dark-400 mb-1.5">
           Nome do Serviço *
         </label>
         <input
@@ -15,25 +15,25 @@
           type="text"
           required
           placeholder="Ex: Corte Degradê Navalhado"
-          class="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 placeholder-slate-400 focus:outline-none focus:border-rasta-green focus:bg-white text-sm"
+          class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 placeholder-dark-400 focus:outline-none focus:border-accent focus:bg-dark-700 text-sm"
         />
       </div>
 
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
+        <label class="block text-xs font-black uppercase tracking-wider text-dark-400 mb-1.5">
           Descrição (Opcional)
         </label>
         <textarea
           v-model="form.description"
           rows="2"
           placeholder="Detalhes dos produtos e técnicas..."
-          class="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 placeholder-slate-400 focus:outline-none focus:border-rasta-green focus:bg-white text-sm resize-none"
+          class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 placeholder-dark-400 focus:outline-none focus:border-accent focus:bg-dark-700 text-sm resize-none"
         ></textarea>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
+          <label class="block text-xs font-black uppercase tracking-wider text-dark-400 mb-1.5">
             Preço (R$) *
           </label>
           <input
@@ -43,12 +43,12 @@
             min="0"
             required
             placeholder="35.00"
-            class="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 placeholder-slate-400 focus:outline-none focus:border-rasta-green focus:bg-white text-sm font-bold"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 placeholder-dark-400 focus:outline-none focus:border-accent focus:bg-dark-700 text-sm font-bold"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-black uppercase tracking-wider text-slate-700 mb-1.5">
+          <label class="block text-xs font-black uppercase tracking-wider text-dark-400 mb-1.5">
             Duração (Minutos) *
           </label>
           <input
@@ -58,24 +58,24 @@
             min="5"
             required
             placeholder="30"
-            class="w-full px-3.5 py-2.5 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 placeholder-slate-400 focus:outline-none focus:border-rasta-green focus:bg-white text-sm font-bold"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 placeholder-dark-400 focus:outline-none focus:border-accent focus:bg-dark-700 text-sm font-bold"
           />
         </div>
       </div>
 
-      <div class="pt-2 flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+      <div class="pt-2 flex items-center justify-between p-3 rounded-xl bg-dark-800/50 border border-white/[0.06]">
         <div>
-          <span class="text-xs font-bold text-surface-900 block">Serviço Ativo no Catálogo</span>
-          <span class="text-[11px] text-slate-700">Permitir que clientes vejam e agendem este serviço</span>
+          <span class="text-xs font-bold text-surface-100 block">Serviço Ativo no Catálogo</span>
+          <span class="text-[11px] text-dark-400">Permitir que clientes vejam e agendem este serviço</span>
         </div>
         <input
           v-model="form.is_active"
           type="checkbox"
-          class="w-5 h-5 rounded text-rasta-green bg-white border-slate-300 focus:ring-rasta-green"
+          class="w-5 h-5 rounded text-accent bg-dark-700 border-white/[0.06] focus:ring-accent"
         />
       </div>
 
-      <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
+      <div class="pt-4 flex justify-end gap-3 border-t border-white/[0.06]">
         <BaseButton variant="ghost" type="button" @click="$emit('update:modelValue', false)">
           Cancelar
         </BaseButton>

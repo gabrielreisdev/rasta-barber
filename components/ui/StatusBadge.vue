@@ -1,26 +1,26 @@
 <template>
   <div
     :class="[
-      'inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-sm',
+      'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300',
       barberStatusStore.isCurrentlyOnline
-        ? 'bg-rasta-green-soft border border-rasta-green-border text-rasta-green'
+        ? 'bg-accent-soft border border-accent-border text-accent'
         : barberStatusStore.statusMode === 'scheduled'
-          ? 'bg-amber-50 border border-amber-200 text-amber-700'
+          ? 'bg-rasta-gold-soft border border-rasta-gold-border text-rasta-gold'
           : 'bg-rasta-red-soft border border-rasta-red-border text-rasta-red'
     ]"
   >
     <span class="relative flex h-2 w-2">
       <span
         v-if="barberStatusStore.isCurrentlyOnline"
-        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"
       ></span>
       <span
         :class="[
           'relative inline-flex rounded-full h-2 w-2',
           barberStatusStore.isCurrentlyOnline
-            ? 'bg-rasta-green'
+            ? 'bg-accent'
             : barberStatusStore.statusMode === 'scheduled'
-              ? 'bg-amber-500'
+              ? 'bg-rasta-gold'
               : 'bg-rasta-red'
         ]"
       ></span>
@@ -38,11 +38,11 @@ const barberStatusStore = useBarberStatusStore()
 
 const badgeText = computed(() => {
   if (barberStatusStore.isCurrentlyOnline) {
-    return 'Rasta Online na Barbearia'
+    return 'Online'
   }
   if (barberStatusStore.statusMode === 'scheduled') {
-    return `Atende ${barberStatusStore.formattedScheduleText}`
+    return `${barberStatusStore.formattedScheduleText}`
   }
-  return 'Barbeiro Offline'
+  return 'Offline'
 })
 </script>

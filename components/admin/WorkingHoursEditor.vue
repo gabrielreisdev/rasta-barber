@@ -3,15 +3,15 @@
     <div
       v-for="(item, index) in workingHours"
       :key="item.day_of_week"
-      class="p-4 rounded-2xl bg-white border border-slate-200 shadow-clean space-y-3"
+      class="p-4 rounded-2xl bg-dark-900 border border-white/[0.06] shadow-clean-md space-y-3"
     >
       <!-- Day Header & Working Toggle -->
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <span class="w-8 h-8 rounded-lg bg-rasta-green-soft text-rasta-green flex items-center justify-center font-black text-sm">
+          <span class="w-8 h-8 rounded-lg bg-accent-soft text-accent flex items-center justify-center font-black text-sm border border-accent-border">
             {{ item.day_of_week === 0 ? 'D' : (item.day_of_week === 6 ? 'S' : item.day_of_week) }}
           </span>
-          <span class="font-bold text-surface-900 text-sm">
+          <span class="font-bold text-surface-100 text-sm">
             {{ getDayOfWeekName(item.day_of_week) }}
           </span>
         </div>
@@ -22,56 +22,56 @@
             type="checkbox"
             class="sr-only peer"
           />
-          <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rasta-green"></div>
-          <span class="ml-2 text-xs font-bold text-surface-700">
+          <div class="w-11 h-6 bg-dark-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent border border-white/[0.06]"></div>
+          <span class="ml-2 text-xs font-bold text-dark-300">
             {{ item.is_working ? 'Aberto' : 'Folga' }}
           </span>
         </label>
       </div>
 
       <!-- Configuração de Horários (se estiver aberto) -->
-      <div v-if="item.is_working" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-2 border-t border-slate-100">
+      <div v-if="item.is_working" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-white/[0.06]">
         <div>
-          <label class="block text-[11px] uppercase tracking-wider text-slate-700 font-extrabold mb-1">
+          <label class="block text-[11px] uppercase tracking-wider text-dark-400 font-extrabold mb-1">
             Início Expediente
           </label>
           <input
             v-model="item.start_time"
             type="time"
-            class="w-full px-3 py-2 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 text-sm focus:border-rasta-green focus:bg-white focus:outline-none font-semibold"
+            class="w-full px-3 py-2 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 text-sm focus:border-accent focus:bg-dark-700 focus:outline-none font-semibold"
           />
         </div>
 
         <div>
-          <label class="block text-[11px] uppercase tracking-wider text-slate-700 font-extrabold mb-1">
+          <label class="block text-[11px] uppercase tracking-wider text-dark-400 font-extrabold mb-1">
             Fim Expediente
           </label>
           <input
             v-model="item.end_time"
             type="time"
-            class="w-full px-3 py-2 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 text-sm focus:border-rasta-green focus:bg-white focus:outline-none font-semibold"
+            class="w-full px-3 py-2 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 text-sm focus:border-accent focus:bg-dark-700 focus:outline-none font-semibold"
           />
         </div>
 
         <div>
-          <label class="block text-[11px] uppercase tracking-wider text-slate-700 font-extrabold mb-1">
+          <label class="block text-[11px] uppercase tracking-wider text-dark-400 font-extrabold mb-1">
             Início Almoço / Pausa
           </label>
           <input
             v-model="item.lunch_start"
             type="time"
-            class="w-full px-3 py-2 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 text-sm focus:border-rasta-green focus:bg-white focus:outline-none font-semibold"
+            class="w-full px-3 py-2 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 text-sm focus:border-accent focus:bg-dark-700 focus:outline-none font-semibold"
           />
         </div>
 
         <div>
-          <label class="block text-[11px] uppercase tracking-wider text-slate-700 font-extrabold mb-1">
+          <label class="block text-[11px] uppercase tracking-wider text-dark-400 font-extrabold mb-1">
             Fim Almoço / Pausa
           </label>
           <input
             v-model="item.lunch_end"
             type="time"
-            class="w-full px-3 py-2 rounded-xl bg-surface-50 border border-slate-200 text-surface-900 text-sm focus:border-rasta-green focus:bg-white focus:outline-none font-semibold"
+            class="w-full px-3 py-2 rounded-xl bg-dark-800 border border-white/[0.06] text-surface-100 text-sm focus:border-accent focus:bg-dark-700 focus:outline-none font-semibold"
           />
         </div>
       </div>

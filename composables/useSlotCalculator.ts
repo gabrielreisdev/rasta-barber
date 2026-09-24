@@ -16,64 +16,79 @@ export const useSlotCalculator = () => {
   const blockedDates = ref<string[]>([]) // Array de datas "YYYY-MM-DD" bloqueadas/folgas
   const loading = ref(false)
 
+  // Função auxiliar para timeout de requisição (1.5s)
+  const withTimeout = <T>(promise: Promise<T>, ms = 1500): Promise<T> => {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+    ])
+  }
+
   // Carrega horários de trabalho e dias bloqueados
   const fetchWorkingHours = async () => {
     loading.value = true
     try {
-      // 1. Busca working_hours
-      const { data, error } = await supabase
-        .from('working_hours')
-        .select('*')
-        .order('day_of_week', { ascending: true })
+      // 1. Busca working_hours com timeout rápido
+      const { data, error } = await withTimeout(
+        supabase.from('working_hours').select('*').order('day_of_week', { ascending: true })
+      )
 
       if (!error && data && data.length > 0) {
         workingHoursList.value = data as WorkingHours[]
       } else {
-        if (import.meta.client) {
-          const cached = localStorage.getItem('rasta_working_hours')
-          if (cached) {
-            workingHoursList.value = JSON.parse(cached)
-          } else {
+        throw new Error('Supabase error or empty')
+      }
+    } catch (err) {
+      if (import.meta.client) {
+        const cached = localStorage.getItem('rasta_working_hours')
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              workingHoursList.value = parsed
+            } else {
+              workingHoursList.value = [...DEFAULT_WORKING_HOURS]
+            }
+          } catch {
             workingHoursList.value = [...DEFAULT_WORKING_HOURS]
           }
         } else {
           workingHoursList.value = [...DEFAULT_WORKING_HOURS]
         }
+      } else {
+        workingHoursList.value = [...DEFAULT_WORKING_HOURS]
       }
-
-      // 2. Busca blocked_dates (Folgas no Calendário)
-      await fetchBlockedDates()
-    } catch (err) {
-      workingHoursList.value = [...DEFAULT_WORKING_HOURS]
-    } finally {
-      loading.value = false
     }
-  }
 
-  const fetchBlockedDates = async () => {
     try {
-      const { data, error } = await supabase
-        .from('blocked_dates')
-        .select('date')
+      // 2. Busca blocked_dates com timeout rápido
+      const { data, error } = await withTimeout(
+        supabase.from('blocked_dates').select('date')
+      )
 
       if (!error && data) {
         blockedDates.value = data.map(d => d.date)
       } else {
-        if (import.meta.client) {
-          const cached = localStorage.getItem('rasta_blocked_dates')
-          if (cached) {
-            blockedDates.value = JSON.parse(cached)
-          }
-        }
+        throw new Error('Supabase error')
       }
     } catch (err) {
       if (import.meta.client) {
         const cached = localStorage.getItem('rasta_blocked_dates')
         if (cached) {
-          blockedDates.value = JSON.parse(cached)
+          try {
+            blockedDates.value = JSON.parse(cached)
+          } catch {}
         }
       }
     }
+    
+    loading.value = false
+  }
+
+  // Compatibilidade caso chamem isolado
+  const fetchBlockedDates = async () => {
+    // Agora o fetchWorkingHours já faz tudo e trata cache corretamente.
+    // Deixo vazio ou posso chamar de novo (mas não é necessário).
   }
 
   // Alterna o status de um dia específico no calendário (Bloqueado/Folga ou Aberto)

@@ -1,11 +1,11 @@
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
       <div>
         <span class="text-xs font-black uppercase tracking-widest text-rasta-gold">Catálogo de Atendimentos</span>
-        <h1 class="text-3xl font-black text-surface-900 mt-1">Gerenciamento de Serviços</h1>
-        <p class="text-sm text-slate-700">Adicione novos serviços, edite preços, ajuste durações ou pause serviços temporariamente.</p>
+        <h1 class="text-3xl font-black text-surface-100 mt-1">Gerenciamento de Serviços</h1>
+        <p class="text-sm text-dark-300">Adicione novos serviços, edite preços, ajuste durações ou pause serviços temporariamente.</p>
       </div>
 
       <BaseButton variant="primary" size="md" @click="openCreateModal">
@@ -18,34 +18,34 @@
       <div
         v-for="service in servicesStore.services"
         :key="service.id"
-        class="p-5 rounded-2xl bg-white border border-slate-200 shadow-clean hover:shadow-clean-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
+        class="p-5 rounded-2xl bg-dark-900 border border-white/[0.06] shadow-clean-md flex flex-col md:flex-row md:items-center justify-between gap-4"
       >
         <!-- Info -->
         <div class="space-y-1 max-w-xl">
           <div class="flex items-center gap-3">
-            <h3 class="text-base font-extrabold text-surface-900">{{ service.name }}</h3>
+            <h3 class="text-base font-extrabold text-surface-100">{{ service.name }}</h3>
             <span
               :class="[
                 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider',
                 service.is_active
-                  ? 'bg-rasta-green-soft text-rasta-green border border-rasta-green-border'
-                  : 'bg-slate-100 text-slate-700 border border-slate-200'
+                  ? 'bg-accent-soft text-accent border border-accent-border'
+                  : 'bg-dark-800 text-dark-400 border border-white/[0.06]'
               ]"
             >
               {{ service.is_active ? 'Ativo no Site' : 'Pausado' }}
             </span>
           </div>
 
-          <p class="text-xs text-slate-700 line-clamp-1">
+          <p class="text-xs text-dark-400 line-clamp-1">
             {{ service.description || 'Sem descrição cadastrada.' }}
           </p>
         </div>
 
         <!-- Metrics & Actions -->
-        <div class="flex items-center justify-between md:justify-end gap-6 pt-3 md:pt-0 border-t md:border-t-0 border-slate-100">
+        <div class="flex items-center justify-between md:justify-end gap-6 pt-3 md:pt-0 border-t md:border-t-0 border-white/[0.06]">
           <div class="text-right">
-            <span class="text-xs text-slate-700 block font-semibold">{{ formatDuration(service.duration_minutes) }}</span>
-            <span class="text-lg font-black text-rasta-green">{{ formatCurrency(service.price) }}</span>
+            <span class="text-xs text-dark-400 block font-semibold">{{ formatDuration(service.duration_minutes) }}</span>
+            <span class="text-lg font-black text-accent">{{ formatCurrency(service.price) }}</span>
           </div>
 
           <div class="flex items-center gap-2">
@@ -54,8 +54,8 @@
               :class="[
                 'p-2.5 rounded-xl text-xs font-bold border transition',
                 service.is_active
-                  ? 'bg-slate-100 text-slate-700 hover:text-rasta-gold border-slate-200'
-                  : 'bg-rasta-green-soft text-rasta-green hover:bg-green-100 border-rasta-green-border'
+                  ? 'bg-dark-800 text-dark-300 hover:text-rasta-gold border-white/[0.06]'
+                  : 'bg-accent-soft text-accent hover:bg-accent-soft/80 border-accent-border'
               ]"
               :title="service.is_active ? 'Pausar Serviço' : 'Ativar Serviço'"
               @click="servicesStore.toggleActive(service.id)"
@@ -71,7 +71,7 @@
 
             <button
               type="button"
-              class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-surface-800 border border-slate-200 transition"
+              class="p-2.5 rounded-xl bg-dark-800 hover:bg-dark-700 text-surface-200 border border-white/[0.06] transition"
               title="Editar"
               @click="openEditModal(service)"
             >
@@ -82,7 +82,7 @@
 
             <button
               type="button"
-              class="p-2.5 rounded-xl bg-rasta-red-soft hover:bg-red-100 text-rasta-red border border-rasta-red-border transition"
+              class="p-2.5 rounded-xl bg-rasta-red-soft hover:bg-rasta-red-soft/80 text-rasta-red border border-rasta-red-border transition"
               title="Excluir"
               @click="handleDelete(service)"
             >

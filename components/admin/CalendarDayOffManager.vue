@@ -1,15 +1,15 @@
 <template>
-  <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-clean space-y-6">
+  <div class="p-6 rounded-2xl bg-dark-900 border border-white/[0.06] shadow-clean-md space-y-6">
     <!-- Header do Calendário de Folgas -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
       <div class="space-y-1">
-        <h3 class="text-lg font-black text-surface-900 flex items-center gap-2">
+        <h3 class="text-lg font-black text-surface-100 flex items-center gap-2">
           <span>Calendário de Folgas & Bloqueios</span>
           <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-rasta-red-soft text-rasta-red border border-rasta-red-border">
             1 Clique para Bloquear
           </span>
         </h3>
-        <p class="text-xs text-slate-600">
+        <p class="text-xs text-dark-300">
           Clique em qualquer dia para alternar entre <strong>Dia de Atendimento (Verde)</strong> e <strong>Folga / Offline (Vermelho)</strong>.
         </p>
       </div>
@@ -18,7 +18,7 @@
       <div class="flex items-center gap-3">
         <button
           type="button"
-          class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-surface-800 transition"
+          class="p-2 rounded-xl border border-white/[0.06] bg-dark-800 hover:bg-dark-700 text-surface-200 transition"
           @click="prevMonth"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -26,13 +26,13 @@
           </svg>
         </button>
 
-        <span class="text-sm font-black text-surface-900 min-w-[140px] text-center capitalize">
+        <span class="text-sm font-black text-surface-100 min-w-[140px] text-center capitalize">
           {{ currentMonthLabel }}
         </span>
 
         <button
           type="button"
-          class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-surface-800 transition"
+          class="p-2 rounded-xl border border-white/[0.06] bg-dark-800 hover:bg-dark-700 text-surface-200 transition"
           @click="nextMonth"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,9 +43,9 @@
     </div>
 
     <!-- Legenda explicativa -->
-    <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
+    <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-dark-300">
       <div class="flex items-center gap-1.5">
-        <span class="w-3 h-3 rounded-md bg-rasta-green"></span>
+        <span class="w-3 h-3 rounded-md bg-accent"></span>
         <span>Dia Aberto para Clientes</span>
       </div>
       <div class="flex items-center gap-1.5">
@@ -53,7 +53,7 @@
         <span>Folga / Fechado (Bloqueado)</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <span class="w-3 h-3 rounded-md bg-slate-200"></span>
+        <span class="w-3 h-3 rounded-md bg-dark-700"></span>
         <span>Folga Padrão Semanal</span>
       </div>
     </div>
@@ -61,7 +61,7 @@
     <!-- Grid de Dias do Mês -->
     <div>
       <!-- Dias da Semana Header -->
-      <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-black uppercase text-slate-500">
+      <div class="grid grid-cols-7 gap-2 mb-2 text-center text-xs font-black uppercase text-dark-400">
         <span>Dom</span>
         <span>Seg</span>
         <span>Ter</span>
@@ -77,7 +77,7 @@
         <div
           v-for="empty in startDayOfWeek"
           :key="'empty-' + empty"
-          class="h-16 rounded-xl bg-slate-50/50 border border-transparent opacity-30 pointer-events-none"
+          class="h-16 rounded-xl bg-dark-800/30 border border-transparent pointer-events-none"
         ></div>
 
         <!-- Dias do Mês -->
@@ -88,10 +88,10 @@
           :disabled="day.isPast"
           :class="[
             'h-16 p-2 rounded-xl border transition-all duration-200 flex flex-col justify-between text-left select-none relative group',
-            day.isPast ? 'opacity-30 bg-slate-100 border-slate-200 cursor-not-allowed' :
+            day.isPast ? 'opacity-30 bg-dark-800 border-white/[0.06] cursor-not-allowed text-dark-400' :
             day.isBlocked ? 'bg-rasta-red-soft border-rasta-red-border text-rasta-red shadow-sm hover:scale-[1.02]' :
-            day.isWeeklyOff ? 'bg-slate-100 border-slate-200 text-slate-500 hover:border-slate-300' :
-            'bg-rasta-green-soft border-rasta-green-border text-rasta-green hover:border-rasta-green shadow-sm hover:scale-[1.02]'
+            day.isWeeklyOff ? 'bg-dark-800 border-white/[0.06] text-dark-400 hover:border-dark-700' :
+            'bg-accent-soft border-accent-border text-accent hover:border-accent shadow-sm hover:scale-[1.02]'
           ]"
           @click="toggleDay(day.dateStr)"
         >
@@ -105,7 +105,7 @@
             >
               {{ day.dayNumber }}
             </span>
-            <span v-if="day.isToday" class="text-[9px] font-extrabold uppercase bg-white px-1.5 py-0.5 rounded shadow-xs">
+            <span v-if="day.isToday" class="text-[9px] font-extrabold uppercase bg-surface-100 text-dark-950 px-1.5 py-0.5 rounded shadow-sm">
               Hoje
             </span>
           </div>

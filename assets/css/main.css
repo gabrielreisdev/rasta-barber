@@ -3,42 +3,131 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-surface-50 text-surface-900 font-sans antialiased min-h-screen selection:bg-rasta-green-soft selection:text-rasta-green;
+  :root {
+    /* DEFAULT DARK MODE */
+    --color-bg-base: #08090C;
+    --color-bg-card: #0D0F14;
+    --color-bg-card-hover: #11141B;
+    --color-bg-elevated: #161A24;
+    --color-border-subtle: #1E2330;
+    --color-text-muted: #272D3D;
+    --color-text-base: #353D52;
+    --color-text-strong: #4A5471;
+    --color-text-stronger: #6B7899;
+    
+    --color-surface-100: #E2E5EB;
+    --color-surface-200: #C8CDD8;
+    --color-surface-300: #9BA3B5;
+    --color-surface-900: #08090C;
   }
 
-  /* Custom scrollbar clean */
+  html.light {
+    /* LIGHT MODE */
+    --color-bg-base: #F8FAFC; 
+    --color-bg-card: #FFFFFF;
+    --color-bg-card-hover: #F1F5F9;
+    --color-bg-elevated: #E2E8F0;
+    --color-border-subtle: #CBD5E1;
+    --color-text-muted: #94A3B8;
+    --color-text-base: #64748B;
+    --color-text-strong: #475569;
+    --color-text-stronger: #334155;
+    
+    --color-surface-100: #0F172A;
+    --color-surface-200: #1E293B;
+    --color-surface-300: #334155;
+    --color-surface-900: #F8FAFC;
+  }
+
+  body {
+    @apply bg-dark-950 text-surface-100 font-sans antialiased min-h-screen transition-colors duration-300;
+    selection {
+      @apply bg-accent-soft text-accent-light;
+    }
+  }
+
+  ::selection {
+    background: rgba(16, 185, 129, 0.25);
+    color: #34D399;
+  }
+
+  /* Dark scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #F1F5F9;
+    background: #11141B;
   }
   ::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
+    background: #272D3D;
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #15803D;
+    background: #10B981;
+  }
+
+  /* Smooth transitions */
+  * {
+    scroll-behavior: smooth;
   }
 }
 
 @layer components {
-  /* Faixa tricolor do reggae elegante */
+  /* Rasta ribbon — now subtle on dark */
   .rasta-ribbon {
-    background: linear-gradient(90deg, #15803D 0%, #EAB308 50%, #DC2626 100%);
+    background: linear-gradient(90deg, #10B981 0%, #F59E0B 50%, #EF4444 100%);
   }
 
   .rasta-ribbon-subtle {
-    background: linear-gradient(90deg, rgba(21, 128, 61, 0.15) 0%, rgba(234, 179, 8, 0.2) 50%, rgba(220, 38, 38, 0.15) 100%);
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.2) 0%, rgba(245, 158, 11, 0.15) 50%, rgba(239, 68, 68, 0.15) 100%);
   }
 
+  /* Glass card — the core card style */
+  .glass-card {
+    @apply bg-dark-800 backdrop-blur-xl border border-white/[0.06] rounded-2xl shadow-clean transition-all duration-300;
+    --tw-bg-opacity: 0.8;
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+  }
+
+  .glass-card-hover {
+    @apply hover:border-accent-border hover:shadow-glow-green hover:-translate-y-0.5;
+  }
+
+  /* Glass input */
+  .glass-input {
+    @apply w-full px-4 py-3 rounded-xl bg-dark-700 border border-white/[0.08] text-surface-100 text-sm font-medium
+           placeholder:text-dark-300
+           focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20
+           transition-all duration-200;
+    --tw-bg-opacity: 0.6;
+  }
+  
+  .glass-input::placeholder {
+    --tw-text-opacity: 0.6;
+  }
+  
+  .glass-input:focus {
+    --tw-bg-opacity: 0.8;
+  }
+
+  /* Subtle divider */
+  .divider {
+    @apply border-white/[0.06];
+  }
+
+  /* Legacy compat */
   .clean-card {
-    @apply bg-white border border-slate-200/80 rounded-2xl shadow-clean transition-all duration-200;
+    @apply glass-card;
   }
-
   .clean-card-hover {
-    @apply hover:border-rasta-green/40 hover:shadow-clean-md hover:-translate-y-0.5;
+    @apply glass-card-hover;
+  }
+}
+
+@layer utilities {
+  /* Glow accent behind elements */
+  .glow-accent {
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.08), 0 0 80px rgba(16, 185, 129, 0.04);
   }
 }

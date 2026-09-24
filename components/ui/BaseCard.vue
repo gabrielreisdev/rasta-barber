@@ -3,7 +3,7 @@
     :class="[
       'clean-card transition-all duration-200',
       hoverable ? 'clean-card-hover cursor-pointer' : '',
-      accent ? 'border-l-4 border-l-rasta-green' : '',
+      accent ? 'border-l-4 border-l-accent' : '',
       paddingClasses
     ]"
   >
