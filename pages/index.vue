@@ -1,20 +1,18 @@
 <template>
   <div class="min-h-screen bg-dark-950">
-    <!-- Cinematic Hero Section -->
-    <section class="relative h-[85vh] sm:h-[90vh] flex items-center justify-center overflow-hidden">
-      <!-- Background Image with Overlay -->
-      <div class="absolute inset-0 z-0">
+    <!-- Compact Hero Banner -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10">
+      <div class="relative h-[340px] sm:h-[400px] rounded-3xl overflow-hidden border border-white/[0.06] shadow-clean-md">
+        <!-- Background Image with Overlay -->
         <img
           src="/hero-bg.jpg"
-          alt="Barbershop Interior"
-          class="w-full h-full object-cover opacity-40 scale-105 transform animate-slow-pan"
+          alt="Ferramentas de barbeiro da Rasta Barber"
+          class="absolute inset-0 w-full h-full object-cover object-right"
         />
-        <div class="absolute inset-0 bg-gradient-to-b from-dark-950/20 via-dark-950/60 to-dark-950"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-dark-950/80 via-transparent to-dark-950/80"></div>
-      </div>
+        <div class="absolute inset-0 bg-gradient-to-r from-dark-950/90 via-dark-950/50 to-transparent"></div>
 
       <!-- Hero Content -->
-      <div class="relative z-10 text-center px-4 max-w-4xl mx-auto space-y-8 mt-12">
+      <div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 max-w-xl space-y-5">
         <!-- <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-dark-900/60 backdrop-blur-md border border-white/10 shadow-clean">
           <span class="relative flex h-2.5 w-2.5">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
@@ -23,28 +21,28 @@
           <span class="text-xs font-bold uppercase tracking-[0.2em] text-surface-200">A Nova Geração da Barbearia</span>
         </div> -->
 
-        <h1 class="text-6xl sm:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9]">
-          CORTE <br class="sm:hidden" />
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-surface-200 to-dark-400">PRECISO.</span><br />
-          <span class="text-accent italic font-serif">VIBE ÚNICA.</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.05]">
+          Corte preciso.<br />
+          <span class="text-accent italic font-serif">Vibe única.</span>
         </h1>
 
-        <p class="text-lg sm:text-xl text-dark-300 max-w-2xl mx-auto font-medium leading-relaxed">
-          Onde a técnica apurada encontra o estilo moderno. Agende seu horário e experimente o padrão Rasta Barber.
+        <p class="text-sm sm:text-base text-dark-300 font-medium leading-relaxed">
+          Técnica apurada e estilo moderno. Agende seu horário em poucos cliques.
         </p>
 
-        <div class="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <NuxtLink to="/agendar" class="w-full sm:w-auto">
-            <button class="w-full sm:w-auto px-10 py-4 rounded-full bg-accent hover:bg-emerald-400 text-dark-950 font-bold text-sm tracking-widest uppercase transition-all duration-300 shadow-[0_0_40px_-10px_rgba(52,211,153,0.5)] hover:shadow-[0_0_60px_-10px_rgba(52,211,153,0.7)] hover:-translate-y-1">
+        <div class="pt-2">
+          <NuxtLink to="/agendar" class="inline-block">
+            <button class="px-8 py-3 rounded-full bg-accent hover:bg-emerald-400 text-dark-950 font-bold text-xs tracking-widest uppercase transition-all duration-300 hover:-translate-y-0.5 shadow-[0_0_30px_-10px_rgba(52,211,153,0.5)]">
               Agendar Agora
             </button>
           </NuxtLink>
         </div>
       </div>
+      </div>
     </section>
 
     <!-- Bento Grid Services Section -->
-    <section class="relative z-20 -mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
+    <section class="relative z-20 pt-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
       <!-- Section Header -->
       <div class="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <div>
@@ -115,19 +113,3 @@ const handleServiceClick = (service: Service) => {
 }
 </script>
 
-<style scoped>
-@keyframes slow-pan {
-  0% {
-    transform: scale(1.05) translate(0, 0);
-  }
-  50% {
-    transform: scale(1.1) translate(-1%, -1%);
-  }
-  100% {
-    transform: scale(1.05) translate(0, 0);
-  }
-}
-.animate-slow-pan {
-  animation: slow-pan 30s ease-in-out infinite;
-}
-</style>

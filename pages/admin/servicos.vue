@@ -99,7 +99,6 @@
     <ServiceModal
       v-model="modalOpen"
       :service="selectedService"
-      @saved="servicesStore.fetchServices"
     />
   </div>
 </template>

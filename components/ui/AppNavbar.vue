@@ -12,7 +12,7 @@
           class="w-10 h-10 rounded-xl object-contain group-hover:scale-105 transition-transform duration-300"
         />
         <div>
-          <span class="font-extrabold text-lg tracking-tight text-surface-100 group-hover:text-accent transition-colors">
+          <span class="font-brand text-2xl leading-none tracking-[0.08em] text-surface-100 group-hover:text-accent transition-colors">
             RASTA <span class="text-accent">BARBER</span>
           </span>
         </div>
@@ -34,6 +34,21 @@
           active-class="!text-accent bg-accent-soft"
         >
           Agendar
+        </NuxtLink>
+
+        <NuxtLink
+          id="nav-status-link"
+          to="/status"
+          class="px-4 py-2 rounded-lg text-sm font-semibold text-dark-300 hover:text-surface-100 hover:bg-white/[0.04] transition-all inline-flex items-center gap-2"
+          active-class="!text-accent bg-accent-soft"
+        >
+          <span
+            :class="[
+              'w-1.5 h-1.5 rounded-full',
+              barberStatusStore.isCurrentlyOnline ? 'bg-accent animate-pulse' : barberStatusStore.statusMode === 'scheduled' ? 'bg-rasta-gold' : 'bg-rasta-red'
+            ]"
+          ></span>
+          Status do Rasta
         </NuxtLink>
 
       </nav>
@@ -93,6 +108,14 @@
           @click="mobileMenuOpen = false"
         >
           Agendar Horário
+        </NuxtLink>
+        <NuxtLink
+          id="nav-status-link-mobile"
+          to="/status"
+          class="block px-4 py-2.5 rounded-lg text-sm font-semibold text-dark-300 hover:bg-white/[0.04] hover:text-accent transition"
+          @click="mobileMenuOpen = false"
+        >
+          Status do Rasta
         </NuxtLink>
       </div>
     </Transition>

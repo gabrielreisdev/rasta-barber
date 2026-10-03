@@ -68,7 +68,8 @@ export default <Partial<Config>>{
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+        display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+        brand: ['"Bebas Neue"', 'Impact', 'sans-serif']
       },
       boxShadow: {
         'clean': '0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2)',
