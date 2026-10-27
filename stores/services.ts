@@ -49,22 +49,47 @@ export const useServicesStore = defineStore('services', () => {
   const fetchServices = async () => {
     loading.value = true
     try {
-      const { data, error } = await withTimeout(
-        supabase
-          .from('services')
-          .select('*')
-          .order('price', { ascending: true })
-      )
+      console.log('[servicesStore] fetchServices starting...')
+      const query = supabase
+        .from('services')
+        .select('*')
+        .order('price', { ascending: true })
+
+      console.log('[servicesStore] querying supabase...')
+      const res = await withTimeout(query, 5000)
+      console.log('[servicesStore] query result:', res)
+
+      const { data, error } = res || {}
+      if (error) {
+        console.error('[servicesStore] Supabase error in fetchServices:', JSON.stringify(error), error?.message, error?.code, error?.details)
+      }
 
       if (!error && data && data.length > 0) {
-        // Supabase retornou dados reais — usa eles
+        console.log('[servicesStore] Loaded real services from Supabase:', data.length)
         services.value = data as Service[]
         persistLocal()
       } else if (import.meta.client) {
-        // Supabase falhou/vazio — tenta cache local, senão mantém DEFAULT_SERVICES
+        console.log('[servicesStore] Supabase returned empty/error. Checking localStorage...')
         localStorage.removeItem('rasta_services')
         localStorage.removeItem('rasta_services_v2')
 
+        const cached = localStorage.getItem(STORAGE_KEY)
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              console.log('[servicesStore] Loaded services from localStorage:', parsed.length)
+              services.value = parsed
+            }
+          } catch (e) {
+            console.error('[servicesStore] Failed to parse localStorage cache', e)
+          }
+        }
+        persistLocal()
+      }
+    } catch (err) {
+      console.error('[servicesStore] Erro ao carregar serviços remotos (usando dados padrão):', err)
+      if (import.meta.client) {
         const cached = localStorage.getItem(STORAGE_KEY)
         if (cached) {
           try {
@@ -74,13 +99,7 @@ export const useServicesStore = defineStore('services', () => {
             }
           } catch {}
         }
-        // Se não tinha cache válido, services já tem DEFAULT_SERVICES
-        persistLocal()
       }
-      // No SSR sem dados do Supabase: services já tem DEFAULT_SERVICES, não mexe
-    } catch (err) {
-      console.warn('Erro ao carregar serviços remotos (usando dados padrão):', err)
-      // services já tem DEFAULT_SERVICES, não precisa sobrescrever
     } finally {
       loading.value = false
     }
@@ -133,15 +152,22 @@ export const useServicesStore = defineStore('services', () => {
   const updateService = async (id: string, updates: Partial<Service>) => {
     loading.value = true
     try {
-      const { error } = await withTimeout(
+      console.log('[servicesStore] updateService starting for id:', id, 'updates:', updates)
+      const res = await withTimeout(
         supabase
           .from('services')
           .update(updates)
-          .eq('id', id),
+          .eq('id', id)
+          .select(),
         5000
       )
+      console.log('[servicesStore] updateService supabase response:', res)
       
-      if (error) throw error
+      const { data, error } = res || {}
+      if (error) {
+        console.error('[servicesStore] updateService supabase error:', error)
+        throw error
+      }
 
       const index = services.value.findIndex(s => s.id === id)
       if (index !== -1) {
@@ -149,8 +175,9 @@ export const useServicesStore = defineStore('services', () => {
         persistLocal()
       }
 
-      return { success: !error }
+      return { success: true, data }
     } catch (err: any) {
+      console.error('[servicesStore] updateService catch block:', err)
       const index = services.value.findIndex(s => s.id === id)
       if (index !== -1) {
         services.value[index] = { ...services.value[index], ...updates }
