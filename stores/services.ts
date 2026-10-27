@@ -165,7 +165,7 @@ export const useServicesStore = defineStore('services', () => {
       
       const { data, error } = res || {}
       if (error) {
-        console.error('[servicesStore] updateService supabase error:', error)
+        console.error('[servicesStore] updateService supabase error:', JSON.stringify(error), error?.message, error?.code, error?.details)
         throw error
       }
 
