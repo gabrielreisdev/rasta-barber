@@ -6,6 +6,10 @@
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <form @submit.prevent="handleSubmit" class="space-y-4">
+      <div v-if="errorMessage" class="p-3 rounded-xl bg-rasta-red-soft border border-rasta-red-border text-xs text-rasta-red font-semibold">
+        {{ errorMessage }}
+      </div>
+
       <div>
         <label class="block text-xs font-black uppercase tracking-wider text-dark-400 mb-1.5">
           Nome do Serviço *
@@ -104,6 +108,7 @@ const emit = defineEmits<{
 
 const servicesStore = useServicesStore()
 const loading = ref(false)
+const errorMessage = ref('')
 
 const form = reactive({
   name: '',
@@ -113,13 +118,13 @@ const form = reactive({
   is_active: true
 })
 
-watch(() => props.service, (val) => {
-  if (val) {
-    form.name = val.name
-    form.description = val.description || ''
-    form.price = Number(val.price)
-    form.duration_minutes = val.duration_minutes
-    form.is_active = val.is_active
+const syncFormWithService = () => {
+  if (props.service) {
+    form.name = props.service.name
+    form.description = props.service.description || ''
+    form.price = Number(props.service.price)
+    form.duration_minutes = props.service.duration_minutes
+    form.is_active = props.service.is_active
   } else {
     form.name = ''
     form.description = ''
@@ -127,9 +132,23 @@ watch(() => props.service, (val) => {
     form.duration_minutes = 35
     form.is_active = true
   }
+}
+
+watch(() => props.modelValue, (isOpen) => {
+  if (isOpen) {
+    errorMessage.value = ''
+    syncFormWithService()
+  }
+})
+
+watch(() => props.service, () => {
+  if (props.modelValue) {
+    syncFormWithService()
+  }
 }, { immediate: true })
 
 const handleSubmit = async () => {
+  errorMessage.value = ''
   loading.value = true
   try {
     if (props.service) {
@@ -139,6 +158,9 @@ const handleSubmit = async () => {
     }
     emit('saved')
     emit('update:modelValue', false)
+  } catch (err: any) {
+    console.error('Falha ao salvar:', err)
+    errorMessage.value = err?.data?.statusMessage || err?.message || 'Erro ao salvar o serviço.'
   } finally {
     loading.value = false
   }

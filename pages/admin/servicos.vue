@@ -1,5 +1,32 @@
 <template>
   <div class="space-y-6">
+    <!-- Feedback Toast -->
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="opacity-0 -translate-y-2"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-2"
+    >
+      <div
+        v-if="successToast"
+        class="p-4 rounded-xl bg-accent-soft border border-accent-border text-accent flex items-center justify-between shadow-lg"
+      >
+        <div class="flex items-center gap-3">
+          <svg class="w-5 h-5 text-accent flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <span class="text-sm font-bold">{{ successToast }}</span>
+        </div>
+        <button type="button" @click="successToast = ''" class="text-accent hover:opacity-80">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </Transition>
+
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-6">
       <div>
@@ -13,8 +40,20 @@
       </BaseButton>
     </div>
 
+    <!-- Loading State -->
+    <div v-if="servicesStore.loading && servicesStore.services.length === 0" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-accent border-r-transparent mb-3"></div>
+      <p class="text-sm text-dark-400">Carregando serviços...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else-if="servicesStore.services.length === 0" class="text-center py-12 border border-dashed border-white/[0.06] rounded-2xl">
+      <p class="text-base font-bold text-surface-100">Nenhum serviço cadastrado.</p>
+      <p class="text-xs text-dark-400 mt-1">Clique no botão acima para adicionar seu primeiro serviço.</p>
+    </div>
+
     <!-- Services Table / Cards List -->
-    <div class="space-y-3">
+    <div v-else class="space-y-3">
       <div
         v-for="service in servicesStore.services"
         :key="service.id"
@@ -58,7 +97,7 @@
                   : 'bg-accent-soft text-accent hover:bg-accent-soft/80 border-accent-border'
               ]"
               :title="service.is_active ? 'Pausar Serviço' : 'Ativar Serviço'"
-              @click="servicesStore.toggleActive(service.id)"
+              @click="handleToggleActive(service.id)"
             >
               <svg v-if="service.is_active" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -99,6 +138,7 @@
     <ServiceModal
       v-model="modalOpen"
       :service="selectedService"
+      @saved="handleSaved"
     />
   </div>
 </template>
@@ -117,6 +157,7 @@ definePageMeta({
 const servicesStore = useServicesStore()
 const modalOpen = ref(false)
 const selectedService = ref<Service | null>(null)
+const successToast = ref('')
 
 onMounted(async () => {
   await servicesStore.fetchServices()
@@ -128,13 +169,33 @@ const openCreateModal = () => {
 }
 
 const openEditModal = (service: Service) => {
-  selectedService.value = service
+  selectedService.value = { ...service }
   modalOpen.value = true
+}
+
+const handleSaved = async () => {
+  successToast.value = 'Serviço salvo com sucesso!'
+  await servicesStore.fetchServices()
+  setTimeout(() => {
+    successToast.value = ''
+  }, 4000)
+}
+
+const handleToggleActive = async (id: string) => {
+  await servicesStore.toggleActive(id)
+  successToast.value = 'Status do serviço atualizado!'
+  setTimeout(() => {
+    successToast.value = ''
+  }, 3000)
 }
 
 const handleDelete = async (service: Service) => {
   if (confirm(`Tem certeza de que deseja excluir o serviço "${service.name}"?`)) {
     await servicesStore.deleteService(service.id)
+    successToast.value = `Serviço "${service.name}" excluído.`
+    setTimeout(() => {
+      successToast.value = ''
+    }, 4000)
   }
 }
 </script>

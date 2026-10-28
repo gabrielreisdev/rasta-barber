@@ -3,107 +3,39 @@ import type { Service } from '~/types'
 
 const DEFAULT_SERVICES: Service[] = [
   {
-    id: 's1-corte',
-    name: 'Corte',
-    description: 'Corte completo com tesoura e máquina, acabamento impecável e alinhamento preciso na navalha.',
-    price: 18.00,
+    id: '2e6303b0-1306-434c-b8cf-899cf5d0b153',
+    name: 'Corte Clássico / Degradê',
+    description: 'Corte com tesoura e máquina, acabamento impecável na navalha com toalha refrescante.',
+    price: 40.00,
+    duration_minutes: 35,
+    is_active: true
+  },
+  {
+    id: '02278c57-ff70-448e-9420-df44001890d8',
+    name: 'Barba Terapia com Toalha Quente',
+    description: 'Modelagem completa da barba, esfoliação facial, hidratação e toalha quente aromática.',
+    price: 35.00,
     duration_minutes: 30,
     is_active: true
   },
   {
-    id: 's2-barba',
-    name: 'Barba',
-    description: 'Modelagem completa da barba, alinhamento das linhas e finalização com balm hidratante.',
-    price: 15.00,
-    duration_minutes: 30,
-    is_active: true
-  },
-  {
-    id: 's3-corte-barba',
-    name: 'Corte e Barba',
-    description: 'A combinação ideal: corte degradê de precisão + modelagem e alinhamento completo da barba.',
-    price: 30.00,
+    id: 'f0b9ec5c-ff1e-4f95-92a7-54bf07f147cc',
+    name: 'Combo Rasta Master (Corte + Barba)',
+    description: 'A experiência completa: corte degradê de precisão + barba terapia completa.',
+    price: 70.00,
     duration_minutes: 60,
     is_active: true
   }
 ]
 
-const STORAGE_KEY = 'rasta_services_v3'
+const STORAGE_KEY = 'rasta_services_v4'
 
 export const useServicesStore = defineStore('services', () => {
-  const supabase = useSupabaseClient()
-  // Inicializa SEMPRE com os serviços padrão — nunca fica vazio
+  // Inicializa com os serviços padrão para renderização imediata
   const services = ref<Service[]>([...DEFAULT_SERVICES])
   const loading = ref(false)
 
   const activeServices = computed(() => services.value.filter(s => s.is_active))
-
-  // Função auxiliar para timeout de requisição (1.5s)
-  const withTimeout = <T>(promise: Promise<T>, ms = 1500): Promise<T> => {
-    return Promise.race([
-      promise,
-      new Promise<T>((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
-    ])
-  }
-
-  const fetchServices = async () => {
-    loading.value = true
-    try {
-      console.log('[servicesStore] fetchServices starting...')
-      const query = supabase
-        .from('services')
-        .select('*')
-        .order('price', { ascending: true })
-
-      console.log('[servicesStore] querying supabase...')
-      const res = await withTimeout(query, 5000)
-      console.log('[servicesStore] query result:', res)
-
-      const { data, error } = res || {}
-      if (error) {
-        console.error('[servicesStore] Supabase error in fetchServices:', JSON.stringify(error), error?.message, error?.code, error?.details)
-      }
-
-      if (!error && data && data.length > 0) {
-        console.log('[servicesStore] Loaded real services from Supabase:', data.length)
-        services.value = data as Service[]
-        persistLocal()
-      } else if (import.meta.client) {
-        console.log('[servicesStore] Supabase returned empty/error. Checking localStorage...')
-        localStorage.removeItem('rasta_services')
-        localStorage.removeItem('rasta_services_v2')
-
-        const cached = localStorage.getItem(STORAGE_KEY)
-        if (cached) {
-          try {
-            const parsed = JSON.parse(cached)
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              console.log('[servicesStore] Loaded services from localStorage:', parsed.length)
-              services.value = parsed
-            }
-          } catch (e) {
-            console.error('[servicesStore] Failed to parse localStorage cache', e)
-          }
-        }
-        persistLocal()
-      }
-    } catch (err) {
-      console.error('[servicesStore] Erro ao carregar serviços remotos (usando dados padrão):', err)
-      if (import.meta.client) {
-        const cached = localStorage.getItem(STORAGE_KEY)
-        if (cached) {
-          try {
-            const parsed = JSON.parse(cached)
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              services.value = parsed
-            }
-          } catch {}
-        }
-      }
-    } finally {
-      loading.value = false
-    }
-  }
 
   const persistLocal = () => {
     if (import.meta.client) {
@@ -111,33 +43,70 @@ export const useServicesStore = defineStore('services', () => {
     }
   }
 
+  const loadFromCache = () => {
+    if (!import.meta.client) return false
+    try {
+      const cached = localStorage.getItem(STORAGE_KEY)
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          services.value = parsed
+          return true
+        }
+      }
+    } catch (e) {
+      console.warn('Erro ao carregar serviços do cache local:', e)
+    }
+    return false
+  }
+
+  // Busca serviços via API segura do servidor
+  const fetchServices = async () => {
+    loading.value = true
+    try {
+      // Limpa chaves legadas com IDs mockados antigos
+      if (import.meta.client) {
+        localStorage.removeItem('rasta_services')
+        localStorage.removeItem('rasta_services_v2')
+        localStorage.removeItem('rasta_services_v3')
+      }
+
+      const data = await $fetch<Service[]>('/api/services')
+      if (data && Array.isArray(data) && data.length > 0) {
+        services.value = data
+        persistLocal()
+      } else {
+        loadFromCache()
+      }
+    } catch (err) {
+      console.warn('Não foi possível carregar serviços da API remota, usando cache/padrão:', err)
+      loadFromCache()
+    } finally {
+      loading.value = false
+    }
+  }
+
   // Criação de novo serviço (Admin)
   const createService = async (serviceData: Omit<Service, 'id' | 'created_at'>) => {
     loading.value = true
     try {
-      const { data, error } = await withTimeout(
-        supabase
-          .from('services')
-          .insert([serviceData])
-          .select()
-          .single(),
-        5000
-      )
+      const created = await $fetch<Service>('/api/services', {
+        method: 'POST',
+        body: serviceData
+      })
 
-      if (error) {
-        console.error('Erro ao criar no Supabase:', error)
-        throw error
-      }
-
-      if (data) {
-        services.value.push(data as Service)
+      if (created) {
+        services.value.push(created)
         persistLocal()
-        return { success: true, data }
+        return { success: true, data: created }
       }
+      throw new Error('Falha ao criar serviço na API')
     } catch (err: any) {
-      console.warn('Falha ao salvar no banco, usando fallback local:', err)
+      console.error('Erro ao criar serviço:', err)
+      // Fallback offline com UUID real
+      const fallbackId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : 'serv_' + Date.now()
       const newService: Service = {
-        id: 'serv_' + Date.now(),
+        id: fallbackId,
         ...serviceData
       }
       services.value.push(newService)
@@ -152,32 +121,20 @@ export const useServicesStore = defineStore('services', () => {
   const updateService = async (id: string, updates: Partial<Service>) => {
     loading.value = true
     try {
-      console.log('[servicesStore] updateService starting for id:', id, 'updates:', updates)
-      const res = await withTimeout(
-        supabase
-          .from('services')
-          .update(updates)
-          .eq('id', id)
-          .select(),
-        5000
-      )
-      console.log('[servicesStore] updateService supabase response:', res)
-      
-      const { data, error } = res || {}
-      if (error) {
-        console.error('[servicesStore] updateService supabase error:', JSON.stringify(error), error?.message, error?.code, error?.details)
-        throw error
-      }
+      const updated = await $fetch<Service>(`/api/services/${id}`, {
+        method: 'PUT',
+        body: updates
+      })
 
       const index = services.value.findIndex(s => s.id === id)
       if (index !== -1) {
-        services.value[index] = { ...services.value[index], ...updates }
+        services.value[index] = { ...services.value[index], ...(updated || updates) }
         persistLocal()
       }
 
-      return { success: true, data }
+      return { success: true, data: updated }
     } catch (err: any) {
-      console.error('[servicesStore] updateService catch block:', err)
+      console.error('Erro ao atualizar serviço remotamente:', err)
       const index = services.value.findIndex(s => s.id === id)
       if (index !== -1) {
         services.value[index] = { ...services.value[index], ...updates }
@@ -200,9 +157,9 @@ export const useServicesStore = defineStore('services', () => {
   const deleteService = async (id: string) => {
     loading.value = true
     try {
-      await supabase.from('services').delete().eq('id', id)
+      await $fetch(`/api/services/${id}`, { method: 'DELETE' })
     } catch (err) {
-      console.warn('Erro ao deletar remoto:', err)
+      console.warn('Erro ao deletar remotamente na API:', err)
     } finally {
       services.value = services.value.filter(s => s.id !== id)
       persistLocal()
